@@ -12,7 +12,7 @@
 # Enable mixed scripts
 #+STAGE_SCRIPT: xeJC
 
-#+TITLE:  ox-stage test (xeJC)
+#+TITLE: （山：やま）の（上：うえ）のカフェ (xeJC)
 #+AUTHOR: Jane Doe
 
 * Cast of Characters

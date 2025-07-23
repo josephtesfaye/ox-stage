@@ -2,7 +2,7 @@
 #+BIND: org-latex-default-packages-alist nil
 #+BIND: org-latex-packages-alist nil
 
-* ox-stage test (xeJC, subtree)
+* （山：やま）の（上：うえ）のカフェ (xeJC, subtree)
 :PROPERTIES:
 :EXPORT_FILE_NAME: output/ox-stage-cjk-subtree-test.pdf
 :EXPORT_LATEX_COMPILER: xelatex

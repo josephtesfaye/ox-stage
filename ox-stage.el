@@ -100,6 +100,7 @@ Return PDF file's name."
   :translate-alist '((headline  . org-stage--headline)
                      (paragraph . org-stage--paragraph)
                      (plain-list . org-stage--plain-list)
+                     (plain-text . org-stage--plain-text)
                      (template . org-stage--template))
 
   ;; Add or redefine options. See `org-export-options-alist'.
@@ -253,6 +254,16 @@ context."
            (format "\\dialog{%s}{%s}" name body)))
        items "\n"))))
 
+(defun org-stage--plain-text (text info)
+  "Transcode a TEXT string from Org to LaTeX. TEXT is the string to transcode.
+INFO is a plist holding contextual information."
+  (setq text (org-latex-plain-text text info))
+  ;; Post-process
+  ;; Transcode title
+  (org-stage--convert-furigana text))
+
+
+;; Utility helpers
 (defun org-stage--regex-headline-p (headline re)
   "Does HEADLINE's raw value match RE (case-insensitive)?"
   (let ((title (org-element-property :raw-value headline)))
