@@ -32,6 +32,8 @@ The Org to TeX mapping rules are as follows:
 - Other plain-list items          → ~\dialog{name}{line}~
   where an item is written as =name: line= (full-width colon "：" can also be used).
 
+Headlines not in an above-mentioned form are ignored.
+
 ** Mixed scripts
 The =stage= backend can optionally turn on support for mixed scripts, with the
 keyword ~#+STAGE_SCRIPT~ or the ~script~ option in ~#+OPTIONS~. The value is a
