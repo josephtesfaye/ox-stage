@@ -258,7 +258,7 @@ context."
   "Convert the Org Mode furigana format `(word:furigana)' to TeX format
 `\ruby{word}{furigana}'."
 
-  (let ((regexp "(\\(.*?\\):\\(.*?\\))"))
+  (let ((regexp "[(（]\\(.*?\\)[:：]\\(.*?\\)[)）]"))
     (replace-regexp-in-string
      regexp
      (lambda (match)
@@ -272,8 +272,8 @@ context."
   "Return the value of a key-value pair from the item at POINT."
 
   ;; Parse translation, if any
-  (pcase-let* ((`(,name . ,body) (org-list-item-get-key-item point))
-               (parts (string-split-to-nth body "\n" 1))
+  (pcase-let* ((`(,name . ,body) (org-stage--list-key-item point))
+               (parts (org-stage--string-split-to-nth body "\n" 1))
                (trans (cadr parts))
                (blanks (when (and trans (string-match "[^ ]" trans))
                          (substring trans 0 (match-beginning 0)))))
@@ -281,5 +281,32 @@ context."
       (setq body (concat (car parts) "\\\\\n" blanks "\\trans{"
                          (string-trim trans) "}")))
     (cons name body)))
+
+(defun org-stage--list-key-item (&optional point)
+  "A \"key item\" is an item specially formatted as \"- <key>: <value>\", where
+the key and value can be any string separated by a colon. Return the item at
+POINT as a key-value pair in a cons cell. If POINT is `nil' the current point is
+used. If POINT is not on a key item return `nil'."
+
+  (when-let ((content (org-list-item-get-content point))
+             (strs (org-stage--string-split-to-nth content "[:：]" 1))
+             ((length> strs 1)))
+    (cons (car strs) (string-trim (cadr strs)))))
+
+(defun org-stage--string-split-to-nth (string separator n)
+  "Split STRING by SEPARATOR, but only to the N-th occurrence of the SEPARATOR."
+
+  (let ((start 0)
+        (num 0)
+        (list '())
+        (substr nil))
+    (while (and (< num n) (string-match separator string start))
+      (setq substr (substring string start (match-beginning 0)))
+      (when (length> substr 0)          ; Remove empty strings
+        (push substr list))
+      (setq num (1+ num))
+      (setq start (match-end 0)))
+    (push (substring string (match-end 0)) list)
+    (nreverse list)))
 
 (provide 'ox-stage)

@@ -22,13 +22,13 @@ The Org to TeX mapping rules are as follows:
 
 - Headline starting with "Cast"   → ~\begin{castpage} … \end{castpage}~
 - Plain-list items under "Cast"   → ~\addcharacter{name}{description}~
-  where an item is written as =name: description=.
+  where an item is written as =name: description= (full-width colon "：" can also be used).
 - Headline starting with "Act"    → ~\act~
 - Headline starting with "Scene"  → ~\scene~
 - First paragraph under a Scene   → ~\opensd{…}~
 - Paragraph between two lists     → ~\stage{…}~
 - Other plain-list items          → ~\dialog{name}{line}~
-  where an item is written as =name: line=.
+  where an item is written as =name: line= (full-width colon "：" can also be used).
 
 ** Mixed scripts
 The =stage= backend can optionally turn on support for mixed scripts, with the
@@ -42,6 +42,7 @@ When CJK scripts are turned on in the configuration the ruby (or furigana)
 feature is also automatically turned on.
 
 - Furigana written in the form ~(word:furigana)~ → ~\ruby{word}{furigana}~
+  where the full-width colon "：" and parentheses "（）" can also be used.
 
 ** Translation
 When CJK scripts are turned on in the configuration the translation
