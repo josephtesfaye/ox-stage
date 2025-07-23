@@ -262,7 +262,7 @@ context."
   "Convert the Org Mode furigana format `(word:furigana)' to TeX format
 `\ruby{word}{furigana}'."
 
-  (let ((regexp "[(（]\\(.*?\\)[:：]\\(.*?\\)[)）]"))
+  (let ((regexp "[(（]\\([^）]*?\\)[:：]\\(.*?\\)[)）]"))
     (replace-regexp-in-string
      regexp
      (lambda (match)

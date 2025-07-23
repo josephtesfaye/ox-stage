@@ -19,7 +19,7 @@
 
 - Alice: a curious girl (好奇心:こうき↓しん)(旺盛:おうせい○)な(少女:しょ↓うじょ)
 - Bob: her thoughtful friend 彼女の友達
-- ゆかり：20代女性、会社員
+- さき（コウ）：ゆかりの（親友：しんゆう）、（自由人：じゆうじん）
 
 * Act I
 ** Scene 1
@@ -34,7 +34,7 @@ Inter-dialogue stage direction
 
 - Alice: Do you think they’ll bloom tomorrow?
 
-- ゆかり：こんなに（歩：ある）くとは（思：おも）わなかったよ。
+- さき：こんなに（歩：ある）くとは（思：おも）わなかったよ。
   没想到要走这么远。
 
 Some other text:\\
