@@ -1,0 +1,97 @@
+% Created 2025-07-23 Wed 11:02
+% Intended LaTeX compiler: xelatex
+\documentclass{stage}
+
+% ==== Mixed Scripts ====
+% ---- Chinese, Japanese ----
+\usepackage{xeCJK}
+\xeCJKsetup{AutoFallBack=true}
+\setCJKmainfont{BIZ UDMincho}
+\setCJKfallbackfamilyfont{\CJKrmdefault}{Sarasa Fixed SC}
+
+% ---- Furigana ----
+\usepackage{ruby}
+% Tune look & spacing
+\renewcommand\rubysep{0.0ex}    % vertical gap (default −0.5 ex)
+\renewcommand\rubysize{0.5}     % ruby 50% of main size
+\setlength{\lineskiplimit}{2pt} % prevents lines from touching when ruby is tall
+
+% ---- Symbols ----
+\usepackage{unicode-math}
+\setmathfont{STIX Two Math}
+
+\usepackage{newunicodechar}
+% For symbols found in the unicode-math font
+\newunicodechar{→}{\(→\)}
+\newunicodechar{←}{\(←\)}
+\newunicodechar{↓}{\(↓\)}
+\newunicodechar{↑}{\(↑\)}
+\newunicodechar{⟶}{\(⟶\)}
+\newunicodechar{⟵}{\(⟵\)}
+\newunicodechar{⇄}{\(⇄\)}
+\newunicodechar{⇆}{\(⇆\)}
+\newunicodechar{⟷}{\(⟷\)}
+\newunicodechar{⟺}{\(⟺\)}
+\newunicodechar{○}{\(○\)}
+\newunicodechar{✓}{\(✓\)}
+
+% For symbols not found in the unicode-math font
+\newfontfamily\symbolsfont{Sarasa Mono CL}[Scale=1.0]
+\newunicodechar{⮂}{{\symbolsfont ⮂}}
+\newunicodechar{⮀}{{\symbolsfont ⮀}}
+
+% ---- Emojis ----
+\usepackage{bxcoloremoji}
+
+% ---- Translations ----
+% Mark any inline translation in a smaller, lighter style
+\usepackage{xcolor}             % provides gray
+\newcommand{\trans}[1]{\begingroup\small\color{gray}#1\endgroup}
+\NewDocumentEnvironment{translation}{}
+  {\par\small\color{gray}\ignorespaces}
+  {\par\ignorespacesafterend}
+
+% ---- Customize title ----
+% Make title bigger
+% titling hooks before \maketitle, so it overrides the size even though the
+% class redefines the command internally.
+\usepackage{titling}
+\pretitle{\begin{center}\Huge\bfseries\textsc}
+\posttitle{\end{center}}
+\preauthor{\begin{center}\Large}
+\postauthor{\end{center}}
+\author{Jane Doe}
+\date{}
+\title{ox-stage test (xeJC)}
+\begin{document}
+
+\maketitle
+
+\begin{castpage}
+  \addcharacter{Alice}{a curious girl \ruby{好奇心}{こうき↓しん}\ruby{旺盛}{おうせい○}な\ruby{少女}{しょ↓うじょ}}
+  \addcharacter{Bob}{her thoughtful friend 彼女の友達}
+\end{castpage}
+
+\act
+\scene
+\opensd{Opening stage direction 开场\ruby{舞台}{wutái}指导}
+
+\dialog{Alice}{Look at these flowers, Bob! \coloremoji{🌷😁}\\
+  \trans{看看这些花，鲍勃！}}
+
+\stage{Inter-dialogue stage direction}
+
+\dialog{Bob}{They’re beautiful. \charsd{\introduce{ALICE} kneels to smell them.}}
+\dialog{Alice}{Do you think they’ll bloom tomorrow?}
+
+Some other text:\\[0pt]
+
+Japanese only characters: あ緑島湯営\\[0pt]
+These symbols →←↓↑⟶⟵⇄⇆⟷⟺○✓ are entered without a wrapper.\\[0pt]
+These symbols \(\char"26E8\symbol{"26E5}\) are entered by codepoints.\\[0pt]
+These symbols \(\Longleftrightarrow\)\ensuremath{\longleftrightarrow} are
+entered by names.\\[0pt]
+
+These symbols {\symbolsfont ✔✗} are entered using
+\texttt{\textbackslash symbolsfont}.\\[0pt]
+\end{document}

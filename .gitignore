@@ -1,0 +1,22 @@
+*~
+.idea
+*.iml
+target
+temp
+scratch.*
+
+# macOS
+.DS_Store
+
+# general latex build output files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.xdv
+*.toc
+*.pdf

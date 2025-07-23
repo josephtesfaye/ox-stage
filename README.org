@@ -1,0 +1,60 @@
+This library defines an Org-mode export back-end – =stage= – that turns
+specially-shaped Org files into LaTeX documents using the [[https://ctan.org/pkg/stage][stage]] document class.
+The mapping rules are hard-wired so that authors only write plain Org syntax;
+all theater-specific macros are generated automatically.
+
+You can use the =stage= class's the native commands normally in your Org text, but
+with the =stage= backend provided by the package =ox-stage= you can write pretty
+much in Org syntax to save you from typing TeX commands and marring the
+readability of your text with them.
+
+* Installation
+Place this file somewhere in ~load-path~ and
+
+: (require 'ox-stage)          ; autoload cookies will do this for you
+
+Then use ~M-x org-stage-export-to-pdf~ (or the dispatcher key =C-c C-e l S=). See
+the README or header of this file for a complete Org sample.
+
+* Features
+** Mapping rules
+The Org to TeX mapping rules are as follows:
+
+- Headline starting with "Cast"   → ~\begin{castpage} … \end{castpage}~
+- Plain-list items under "Cast"   → ~\addcharacter{name}{description}~
+  where an item is written as =name: description=.
+- Headline starting with "Act"    → ~\act~
+- Headline starting with "Scene"  → ~\scene~
+- First paragraph under a Scene   → ~\opensd{…}~
+- Paragraph between two lists     → ~\stage{…}~
+- Other plain-list items          → ~\dialog{name}{line}~
+  where an item is written as =name: line=.
+
+** Mixed scripts
+The =stage= backend can optionally turn on support for mixed scripts, with the
+keyword ~#+STAGE_SCRIPT~ or the ~script~ option in ~#+OPTIONS~. The value is a
+supported mixed scripts plan, such as ~CJ~ for Chinese and Japanese (English is
+always supported).
+
+Supported plans:
+
+- ~xeJC~: Compile with =xeCJK= and support Japanese (main), Chinese (simplified), symbols, emojis
+
+** Furigana
+When CJK scripts are turned on in the configuration the ruby (or furigana)
+feature is also automatically turned on.
+
+- Furigana written in the form ~(word:furigana)~ → ~\ruby{word}{furigana}~
+
+** Translation
+When CJK scripts are turned on in the configuration the translation
+feature is also automatically turned on.
+
+- The second paragraph of a plain list item → ~\trans{content}~
+
+* Examples
+See the files under the =test/= directory for examples:
+
+- [[file:test/ox-stage-test.org][Demo for the basics]]
+- [[file:test/ox-stage-xeJC-test.org][Demo for mixed scripts (xeJC)]]
+- [[file:test/ox-stage-xeJC-subtree-test.org][Demo for mixed scripts (xeJC) in a subtree]]

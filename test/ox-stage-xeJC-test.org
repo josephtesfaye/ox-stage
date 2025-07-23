@@ -1,0 +1,45 @@
+#+EXPORT_FILE_NAME: output/ox-stage-xeJC-test.pdf
+
+#+LATEX_COMPILER: xelatex
+
+# Tell Org to use \documentclass{stage}
+#+LATEX_CLASS: stage
+
+# Disable default packages
+#+BIND: org-latex-default-packages-alist nil
+#+BIND: org-latex-packages-alist nil
+
+# Enable mixed scripts
+#+STAGE_SCRIPT: xeJC
+
+#+TITLE:  ox-stage test (xeJC)
+#+AUTHOR: Jane Doe
+
+* Cast of Characters
+
+- Alice: a curious girl (好奇心:こうき↓しん)(旺盛:おうせい○)な(少女:しょ↓うじょ)
+- Bob: her thoughtful friend 彼女の友達
+
+* Act I
+** Scene 1
+Opening stage direction 开场(舞台:wutái)指导
+
+- Alice: Look at these flowers, Bob! \coloremoji{🌷😁}
+  看看这些花，鲍勃！
+
+Inter-dialogue stage direction
+
+- Bob: They’re beautiful. \charsd{\introduce{ALICE} kneels to smell them.}
+
+- Alice: Do you think they’ll bloom tomorrow?
+
+Some other text:\\
+
+Japanese only characters: あ緑島湯営\\
+These symbols →←↓↑⟶⟵⇄⇆⟷⟺○✓ are entered without a wrapper.\\
+These symbols \(\char"26E8\symbol{"26E5}\) are entered by codepoints.\\
+These symbols \(\Longleftrightarrow\)\ensuremath{\longleftrightarrow} are
+entered by names.\\
+# Use @@latex:{}@@ to unescape {} as TeX speical characters.
+These symbols @@latex:{\symbolsfont ✔✗}@@ are entered using
+\texttt{\textbackslash symbolsfont}.\\
