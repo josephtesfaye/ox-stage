@@ -1,4 +1,4 @@
-This library defines an Org-mode export back-end – =stage= – that turns
+This library defines an Org-mode export backend – =stage= – that turns
 specially-shaped Org files into LaTeX documents using the [[https://ctan.org/pkg/stage][stage]] document class.
 The mapping rules are hard-wired so that authors only write plain Org syntax;
 all theater-specific macros are generated automatically.
@@ -33,10 +33,7 @@ The Org to TeX mapping rules are as follows:
 ** Mixed scripts
 The =stage= backend can optionally turn on support for mixed scripts, with the
 keyword ~#+STAGE_SCRIPT~ or the ~script~ option in ~#+OPTIONS~. The value is a
-supported mixed scripts plan, such as ~CJ~ for Chinese and Japanese (English is
-always supported).
-
-Supported plans:
+supported mixed scripts plan, listed as below:
 
 - ~xeJC~: Compile with =xeCJK= and support Japanese (main), Chinese (simplified), symbols, emojis
 
