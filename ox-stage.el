@@ -208,7 +208,9 @@ contents string. INFO is a plist holding export options."
       (concat "\\act\n" opensd contents))
      ((org-stage--regex-headline-p headline "\\`[Ss]cene")
       (concat "\\scene\n" opensd contents))
-     (t (org-latex-headline headline contents info)))))
+     ;; Ignore any other headlines
+     ;; (t (org-latex-headline headline contents info))
+     )))
 
 (defun org-stage--paragraph (paragraph contents info)
   "Maybe wrap paragraph CONTENTS in `\opensd{}' or `\stage{}' depending on

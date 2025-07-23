@@ -12,6 +12,9 @@
 #+TITLE:  ox-stage test
 #+AUTHOR: Jane Doe
 
+* Introduction
+This is a minimal ox-stage demo.
+
 * Cast of Characters
 
 - Alice: a curious girl
