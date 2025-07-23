@@ -196,14 +196,18 @@ contents string. INFO is a plist holding export options."
 
 (defun org-stage--headline (headline contents info)
   "Translate HEADLINE to LaTeX according to stage rules."
-  (cond
-   ((org-stage--regex-headline-p headline "\\`[Cc]ast")
-    (format "\\begin{castpage}\n%s\\end{castpage}\n" contents))
-   ((org-stage--regex-headline-p headline "\\`[Aa]ct")
-    (concat "\\act\n" contents))
-   ((org-stage--regex-headline-p headline "\\`[Ss]cene")
-    (concat "\\scene\n" contents))
-   (t (org-latex-headline headline contents info))))
+  (pcase-let* ((`(,name ,body) (org-stage--string-split-to-nth
+                                (org-element-property :raw-value headline)
+                                "[:：]" 1))
+               (opensd (when body (format "\\opensd{%s}\n" (string-trim body)))))
+    (cond
+     ((org-stage--regex-headline-p headline "\\`[Cc]ast")
+      (format "\\begin{castpage}\n%s\\end{castpage}\n" contents))
+     ((org-stage--regex-headline-p headline "\\`[Aa]ct")
+      (concat "\\act\n" opensd contents))
+     ((org-stage--regex-headline-p headline "\\`[Ss]cene")
+      (concat "\\scene\n" opensd contents))
+     (t (org-latex-headline headline contents info)))))
 
 (defun org-stage--paragraph (paragraph contents info)
   "Maybe wrap paragraph CONTENTS in `\opensd{}' or `\stage{}' depending on
@@ -239,13 +243,13 @@ context."
     (if in-cast?
         (mapconcat
          (lambda (item)
-           (pcase-let ((`(,name . ,body) (org-stage--item-body item)))
+           (pcase-let ((`(,name . ,body) (org-stage--key-item item)))
              (format "  \\addcharacter{%s}{%s}" name body)))
          items "\n")
 
       (mapconcat
        (lambda (item)
-         (pcase-let ((`(,name . ,body) (org-stage--item-body item)))
+         (pcase-let ((`(,name . ,body) (org-stage--key-item item)))
            (format "\\dialog{%s}{%s}" name body)))
        items "\n"))))
 
@@ -268,11 +272,11 @@ context."
                  (match-string 2 match))))
      contents)))
 
-(defun org-stage--item-body (point)
+(defun org-stage--key-item (point)
   "Return the value of a key-value pair from the item at POINT."
 
   ;; Parse translation, if any
-  (pcase-let* ((`(,name . ,body) (org-stage--list-key-item point))
+  (pcase-let* ((`(,name . ,body) (org-stage--list-item-get-key-item point))
                (parts (org-stage--string-split-to-nth body "\n" 1))
                (trans (cadr parts))
                (blanks (when (and trans (string-match "[^ ]" trans))
@@ -282,13 +286,13 @@ context."
                          (string-trim trans) "}")))
     (cons name body)))
 
-(defun org-stage--list-key-item (&optional point)
+(defun org-stage--list-item-get-key-item (&optional point)
   "A \"key item\" is an item specially formatted as \"- <key>: <value>\", where
 the key and value can be any string separated by a colon. Return the item at
 POINT as a key-value pair in a cons cell. If POINT is `nil' the current point is
 used. If POINT is not on a key item return `nil'."
 
-  (when-let ((content (org-list-item-get-content point))
+  (when-let ((content (org-stage--list-item-get-content point))
              (strs (org-stage--string-split-to-nth content "[:：]" 1))
              ((length> strs 1)))
     (cons (car strs) (string-trim (cadr strs)))))
@@ -296,17 +300,59 @@ used. If POINT is not on a key item return `nil'."
 (defun org-stage--string-split-to-nth (string separator n)
   "Split STRING by SEPARATOR, but only to the N-th occurrence of the SEPARATOR."
 
-  (let ((start 0)
-        (num 0)
-        (list '())
-        (substr nil))
-    (while (and (< num n) (string-match separator string start))
-      (setq substr (substring string start (match-beginning 0)))
-      (when (length> substr 0)          ; Remove empty strings
-        (push substr list))
-      (setq num (1+ num))
-      (setq start (match-end 0)))
-    (push (substring string (match-end 0)) list)
-    (nreverse list)))
+  (if (string-match-p separator string)
+      (let ((start 0)
+            (num 0)
+            (list '())
+            (substr nil))
+        (while (and (< num n) (string-match separator string start))
+          (setq substr (substring string start (match-beginning 0)))
+          (when (length> substr 0)      ; Remove empty strings
+            (push substr list))
+          (setq num (1+ num))
+          (setq start (match-end 0)))
+        (push (substring string (match-end 0)) list)
+        (nreverse list))
+    (list string)))
+
+(defun org-stage--list-item-get-content (&optional point only-first)
+  "Return the content of the item at POINT without the sublist items. If POINT
+is `nil' the current point is used. If POINT is not in a plain list item return
+`nil'. If the item has a subtree return the content between its bullet and the
+first child's bullet. If ONLY-FIRST is non-nil return only the first paragraph
+of the said content.
+
+The \"item end\" in the list returned by `org-list-struct' is the position where
+the last sublist item ends, which can be confusing if you want only the content
+of the item without the sublist items. In this case, you can obtain the content
+from the `paragraph' object of the item."
+
+  (when-let ((element (org-list-get-item point))
+             (contents-begin (org-element-property :contents-begin element))
+             (contents-end (org-element-property :contents-end element))
+             (struct (org-element-property :structure element))
+             (item (org-element-property :begin element)))
+    (if-let ((only-first)
+             (element2 (org-element-at-point contents-begin))
+             ((equal 'paragraph (org-element-type element2))))
+        (setq contents-end (org-element-property :contents-end element2))
+
+      (when-let ((child-item (org-list-has-child-p item struct)))
+        (setq contents-end child-item)))
+
+    (let ((contents (buffer-substring-no-properties
+                     contents-begin
+                     ;; Using `1-' is because `contents-end' is actually the
+                     ;; start of the next element so it extends to the `\n'
+                     ;; character.
+                     (1- contents-end))))
+      ;; Delete lines whose first non-blank character is # (commented lines) and
+      ;; not the start of an example or source code block, etc. Use ? to match
+      ;; newline 0 or 1 times, which is to match the last line which may not
+      ;; contain a newline.
+      (setq contents (replace-regexp-in-string "^ *# .*\n?" "" contents))
+      ;; Remove the last newline if present
+      (setq contents (string-remove-suffix "\n" contents))
+      contents)))
 
 (provide 'ox-stage)

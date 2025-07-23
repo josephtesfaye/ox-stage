@@ -25,7 +25,9 @@ The Org to TeX mapping rules are as follows:
   where an item is written as =name: description= (full-width colon "：" can also be used).
 - Headline starting with "Act"    → ~\act~
 - Headline starting with "Scene"  → ~\scene~
-- First paragraph under a Scene   → ~\opensd{…}~
+- Headline part after a colon ":" → ~\opensd{…}~
+  Full-width colon "：" can also be used.
+- First paragraph under a scene   → ~\opensd{…}~
 - Paragraph between two lists     → ~\stage{…}~
 - Other plain-list items          → ~\dialog{name}{line}~
   where an item is written as =name: line= (full-width colon "：" can also be used).

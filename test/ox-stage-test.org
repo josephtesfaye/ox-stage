@@ -9,7 +9,7 @@
 #+BIND: org-latex-default-packages-alist nil
 #+BIND: org-latex-packages-alist nil
 
-#+TITLE:  OX Stage Test
+#+TITLE:  ox-stage test
 #+AUTHOR: Jane Doe
 
 * Cast of Characters
@@ -17,8 +17,8 @@
 - Alice: a curious girl
 - Bob: her thoughtful friend
 
-* Act I
-** Scene 1
+* Act I: Act description...
+** Scene 1: Scene description...
 Opening stage direction...
 
 - Alice: Look at these flowers, Bob!
